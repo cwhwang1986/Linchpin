@@ -1,3 +1,7 @@
+/*	
+	note.jsx is the presentational component
+*/
+
 import React from 'react';
 
 export default class Note extends React.Component {
@@ -17,14 +21,30 @@ export default class Note extends React.Component {
 		console.log('shouldComponentUpdate');
 		return true;
 	}
-	render() {
-		console.log('note level render');
-		if(this.state.editing) {
-    		return this.renderEdit();
-    	}
-    	return this.renderNote();
+	_edit() {
+		this.setState({
+			editing: true
+	    }, console.log('Setstate edititng true'));
 	}
-	renderEdit() {
+	_checkEnter(e) {
+	    if(e.key === 'Enter') {
+	    	this.finishEdit(e);
+	    }
+	}
+	_finishEdit(e) {
+		const value = e.target.value;
+	    if(this.props.onEdit) {
+	    	this.props.onEdit(value);
+	    	console.log('note emit edit');
+	    	this.setState({
+	    		editing: false
+	    	});
+	    }
+	}
+	_deleteNote() {
+		this.props.onDelete();
+	}
+	_renderEdit() {
 		return (
 			<input type="text"
 			    ref={
@@ -37,7 +57,7 @@ export default class Note extends React.Component {
 			/>
 		);
 	}
-	renderNote() {
+	_renderNote() {
 	    return (
 	    	<div>
 		    	<a onClick={this.edit}>{this.props.task}</a>
@@ -45,28 +65,11 @@ export default class Note extends React.Component {
 		    </div>
 	    );
 	}
-	edit() {
-		this.setState({
-			editing: true
-	    }, console.log('Setstate edititng true'));
-	}
-	checkEnter(e) {
-	    if(e.key === 'Enter') {
-	    	this.finishEdit(e);
-	    }
-	}
-	finishEdit(e) {
-		const value = e.target.value;
-	    if(this.props.onEdit) {
-	    	this.props.onEdit(value);
-	    	console.log('note emit edit');
-	    	this.setState({
-	    		editing: false
-	    	});
-	    }
-	}
-	deleteNote() {
-		this.props.onDelete();
+	render() {
+		if(this.state.editing) {
+    		return this.renderEdit();
+    	}
+    	return this.renderNote();
 	}
 }
 	

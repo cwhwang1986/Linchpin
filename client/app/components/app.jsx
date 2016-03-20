@@ -1,44 +1,33 @@
 import React from 'react';
 import Notes from './notes.jsx';
+import uuid from 'node-uuid';
 
 
 export default class App extends React.Component {
 	constructor(props) {
 		super(props);
-		this.addNote = this.addNote.bind(this);
-		this.editNote = this.editNote.bind(this);
-		this.deleteNote = this.deleteNote.bind(this);
+		// bind keyword this to function
+		this._addNote = this._addNote.bind(this);
+		this._editNote = this._editNote.bind(this);
+		this._deleteNote = this._deleteNote.bind(this);
 		this.state = {
 			notes: [
 				{
-					id: 1,
+					id: uuid.v4(),
 					task: 'Learn Webpack'
 				},
 				{
-					id: 2,
+					id: uuid.v4(),
 					task: 'Learn React'
 				},
 				{
-					id: 3,
+					id: uuid.v4(),
 					task: 'Do laundry'
 				}
 		    ]
 		};
 	}
-	render() {
-		const notes = this.state.notes;
-		console.log('app level render');
-		return (
-			<div>
-				<button onClick={this.addNote}>+</button>
-				<Notes 
-					notes={notes} 
-					onEdit={this.editNote}
-					onDelete={this.deleteNote}/>
-			</div>	
-		);
-	}
-	addNote() {
+	_addNote() {
 		this.setState({
 		    notes: this.state.notes.concat([{
 		    	id: this.state.notes.length+1,
@@ -46,7 +35,7 @@ export default class App extends React.Component {
 		    }])
 		});
 	}
-	editNote(id, task) {
+	_editNote(id, task) {
 		if(!task.trim()) {
 	    	return;
 	    }
@@ -56,20 +45,31 @@ export default class App extends React.Component {
 	        }
      	    return note;
 	    });
-	    console.log('app level set state');
 		this.setState({notes});
 	}
-	deleteNote(id) {
+	_deleteNote(id) {
 		let deleteNoteIdx;
 	    this.state.notes.forEach((note, idx) => {
 	        if(note.id === id) {
 	        	deleteNoteIdx = idx;
 	        }
 	    });
-	    console.log(deleteNoteIdx);
 	    this.state.notes.splice(deleteNoteIdx, 1);
-	    console.log( this.state.notes);
 	    const notes = this.state.notes;
 		this.setState({notes});
+	}
+
+
+	render() {
+		const notes = this.state.notes;
+		return (
+			<div>
+				<button onClick={this._addNote}>+</button>
+				<Notes 
+					notes={notes} 
+					onEdit={this._editNote}
+					onDelete={this._deleteNote}/>
+			</div>	
+		);
 	}
 }

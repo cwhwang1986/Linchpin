@@ -1,11 +1,15 @@
 const path = require('path');
 const webpack = require('webpack')
+const TARGET = process.env.npm_lifecycle_event;
+const merge = require('webpack-merge');
+
+
 const PATHS = {
   app: path.join(__dirname, 'app/init.jsx'),
   build: path.join(__dirname, 'build')
 };
 
-module.exports = {
+const common = {
 	entry: {
 		app: PATHS.app
 	},
@@ -36,3 +40,21 @@ module.exports = {
         ]
     },
 };
+
+if (TARGET === 'start' || !TARGET) {
+    module.exports = merge(common, {
+        devServer: {
+            contentBase: PATHS.build,
+            historyApiFallback: true,
+            hot: true,
+            inline: true,
+            progress: true,
+            stats: 'errors-only',
+            host: process.env.HOST,
+            port: process.env.PORT || 3000
+        },
+        plugins: [
+            new webpack.HotModuleReplacementPlugin()
+        ]
+    });
+}
