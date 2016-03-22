@@ -41,7 +41,8 @@ export default class Task extends React.Component {
 	    	});
 	    }
 	}
-	_deleteTask() {
+	_deleteTask(e) {
+		e.stopPropagation();
 		this.props.onDelete();
 	}
 	_renderEdit() {
@@ -70,7 +71,8 @@ export default class Task extends React.Component {
 	    );
 	}
 	render() {
-		if(this.state.editing) {
+		if (this.state.editing) {
+			debugger;
     		return this._renderEdit();
     	}
     	return this._renderTasks();

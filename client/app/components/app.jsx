@@ -7,8 +7,8 @@ import Tasks from './tasks.jsx';
 import uuid from 'node-uuid';
 
 
-const chars = ['abcdefghijklmnopqrstuvwxyz'];
-const createNewTask = function() {
+var chars = ['abcdefghijklmnopqrstuvwxyz'];
+var createNewTask = function() {
 	let randNum = Math.floor(Math.random()*20 + 1);
 	let taskName = (function() {
 		let result = '';
@@ -22,32 +22,30 @@ const createNewTask = function() {
 };
 
 
-
-
-
 export default class App extends React.Component {
 	constructor(props) {
 		super(props);
+		// bind the keyword this 
 		this._addTask = this._addTask.bind(this);
 		this._editTask = this._editTask.bind(this);
 		this._deleteTask = this._deleteTask.bind(this);
-		
+		// Initialize the state
 		let tasks = [createNewTask(), createNewTask(), createNewTask()];
 		this.state = {tasks: tasks};
 	}
 
 	_addTask() {
 		let newTasks = this.state.tasks.concat([createNewTask()]);
-
 		this.setState({
 	    	tasks: newTasks
 		});
 	}
 	_editTask(id, taskName) {
 		if(!taskName.trim()) {
+			console.log('asdsa');
 	    	return;
 	    }
-	    const tasks = this.state.tasks.map(task => {
+	    let tasks = this.state.tasks.map(task => {
 	        if(task.id === id && task) {
 	          task.taskName = taskName;
 	        }
@@ -55,7 +53,7 @@ export default class App extends React.Component {
 	    });
 		this.setState({tasks});
 	}
-	_deleteTask(id) {
+	_deleteTask(id, event) {
 		let deleteTaskIdx;
 	    this.state.tasks.forEach((task, idx) => {
 	        if(task.id === id) {
@@ -63,13 +61,13 @@ export default class App extends React.Component {
 	        }
 	    });
 	    this.state.tasks.splice(deleteTaskIdx, 1);
-	    const tasks = this.state.tasks;
+	    let tasks = this.state.tasks;
 		this.setState({tasks});
 	}
 
 
 	render() {
-		const tasks = this.state.tasks;
+		let tasks = this.state.tasks;
 		return (
 			<div>
 				<button onClick={this._addTask}>+</button>
